@@ -95,7 +95,6 @@ public abstract class DoorBlockEntity extends SyncingBlockEntity {
         super.writeNbt(nbt, registryLookup);
         nbt.putBoolean("open", this.isOpen());
         nbt.putString("keyName", this.getKeyName());
-        nbt.putInt("closeCountdown", this.getCloseCountdown());
     }
 
     @Override
@@ -103,7 +102,6 @@ public abstract class DoorBlockEntity extends SyncingBlockEntity {
         super.readNbt(nbt, registryLookup);
         this.setOpen(nbt.getBoolean("open"));
         this.setKeyName(nbt.getString("keyName"));
-        this.setCloseCountdown(nbt.getInt("closeCountdown"));
     }
 
     public String getKeyName() {
@@ -112,13 +110,5 @@ public abstract class DoorBlockEntity extends SyncingBlockEntity {
 
     public void setKeyName(String string) {
         this.keyName = string;
-    }
-
-    public int getCloseCountdown() {
-        return closeCountdown;
-    }
-
-    public void setCloseCountdown(int closeCountdown) {
-        this.closeCountdown = closeCountdown;
     }
 }

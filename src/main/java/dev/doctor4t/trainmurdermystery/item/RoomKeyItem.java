@@ -36,7 +36,7 @@ public class RoomKeyItem extends Item {
                     return ActionResult.SUCCESS;
                 } else {
                     if (mainHandStack.getName().getString().equals(entity.getKeyName())) {
-                        SmallDoorBlock.openDoor(state, world, entity, lowerPos);
+                        SmallDoorBlock.toggleDoor(state, world, entity, lowerPos);
                         return ActionResult.SUCCESS;
                     } else if (world.isClient) {
                         player.sendMessage(Text.translatable("tip.door.requires_different_key"), true);

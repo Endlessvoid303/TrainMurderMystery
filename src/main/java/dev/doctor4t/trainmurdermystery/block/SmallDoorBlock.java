@@ -15,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -24,6 +25,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -138,7 +140,7 @@ public class SmallDoorBlock extends DoorPartBlock {
             }
             BlockPos lowerPos = state.get(HALF) == DoubleBlockHalf.LOWER ? pos : pos.down();
             if (world.getBlockEntity(lowerPos) instanceof SmallDoorBlockEntity entity) {
-                openDoor(state, world, entity, lowerPos);
+                toggleDoor(state, world, entity, lowerPos);
             }
             return ActionResult.CONSUME;
         } else {
@@ -151,7 +153,7 @@ public class SmallDoorBlock extends DoorPartBlock {
         }
     }
 
-    public static void openDoor(BlockState state, World world, SmallDoorBlockEntity entity, BlockPos lowerPos) {
+    public static void toggleDoor(BlockState state, World world, SmallDoorBlockEntity entity, BlockPos lowerPos) {
         entity.toggle(false);
         Direction facing = state.get(FACING);
         BlockPos neighborPos = lowerPos.offset(facing.rotateYCounterclockwise());
@@ -161,7 +163,19 @@ public class SmallDoorBlock extends DoorPartBlock {
                 && world.getBlockEntity(neighborPos) instanceof SmallDoorBlockEntity neighborEntity) {
             neighborEntity.toggle(true);
         }
-        world.scheduleBlockTick();
+
+        // schedule doors to automatically close 5s after being opened
+        if (state.get(OPEN)) {
+            world.scheduleBlockTick(lowerPos, state.getBlock(), 100);
+        }
     }
 
+    @Override
+    protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        super.scheduledTick(state, world, pos, random);
+
+        if (state.get(OPEN) && world.getBlockEntity(pos) instanceof SmallDoorBlockEntity entity) {
+            toggleDoor(state, world, entity, pos);
+        }
+    }
 }
