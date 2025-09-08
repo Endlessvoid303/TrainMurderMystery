@@ -4,18 +4,19 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
 import dev.doctor4t.trainmurdermystery.client.util.AlwaysVisibleFrustum;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.chunk.ChunkBuilder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
+import net.minecraft.util.math.MathHelper;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,6 +32,8 @@ public abstract class WorldRendererMixin {
     @Shadow
     @Final
     private MinecraftClient client;
+
+    @Shadow private int ticks;
 
     @Inject(method = "method_52816", at = @At(value = "RETURN"), cancellable = true)
     private static void method_52816(Frustum frustum, CallbackInfoReturnable<Frustum> cir) {
@@ -77,7 +80,7 @@ public abstract class WorldRendererMixin {
         int tileLength = 32 * chunkSize;
         int tileSize = tileLength * 3;
 
-        int time = client.player.age; // TODO: replace with a proper time
+        float time = ticks + client.getRenderTickCounter().getTickDelta(true); // TODO: replace with a proper time
 
         while (bl2 ? objectListIterator.hasNext() : objectListIterator.hasPrevious()) {
             boolean tooFar = false;
@@ -103,15 +106,15 @@ public abstract class WorldRendererMixin {
                     float finalZ = v3;
 
                     if (zSection <= -8) {
-                        finalX = ((v1 - tileLength + ((time + client.getRenderTickCounter().getTickDelta(true)) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
+                        finalX = ((v1 - tileLength + ((time ) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
                         finalY = (v2 + height);
                         finalZ = v3 + tileWidth;
                     } else if (zSection >= 8) {
-                        finalX = ((v1 + tileLength + ((time + client.getRenderTickCounter().getTickDelta(true)) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
+                        finalX = ((v1 + tileLength + ((time ) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
                         finalY = (v2 + height);
                         finalZ = v3 - tileWidth;
                     } else if (!trainSection) {
-                        finalX = ((v1 + ((time + client.getRenderTickCounter().getTickDelta(true)) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
+                        finalX = ((v1 + ((time ) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
                         finalY = (v2 + height);
                         finalZ = v3;
                     }
