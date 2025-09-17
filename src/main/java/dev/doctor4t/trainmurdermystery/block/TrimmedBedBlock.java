@@ -2,6 +2,7 @@ package dev.doctor4t.trainmurdermystery.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.Entity;
@@ -15,8 +16,8 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -28,14 +29,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class TrimmedBedBlock extends HorizontalFacingBlock {
-    public static final EnumProperty<BedPart> PART = Properties.BED_PART;
-    public static final BooleanProperty OCCUPIED = Properties.OCCUPIED;
-
+public class TrimmedBedBlock extends BedBlock {
     public static final VoxelShape SHAPE = Block.createCuboidShape(0, 0, 0, 16, 8, 16);
 
     public TrimmedBedBlock(Settings settings) {
-        super(settings);
+        super(DyeColor.WHITE, settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(PART, BedPart.FOOT).with(OCCUPIED, false));
     }
 
@@ -118,29 +116,25 @@ public class TrimmedBedBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
-        return null;
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.CONSUME;
-        }
-        if (state.get(PART) != BedPart.HEAD && !(state = world.getBlockState(pos = pos.offset(state.get(FACING)))).isOf(this)) {
-            return ActionResult.CONSUME;
-        }
-        if (state.get(OCCUPIED)) {
-            player.sendMessage(Text.translatable("block.minecraft.bed.occupied"), true);
-
-            return ActionResult.FAIL;
-        }
-        player.trySleep(pos).ifLeft(reason -> {
-            if (reason.getMessage() != null) {
-                player.sendMessage(reason.getMessage(), true);
+        } else {
+            if (state.get(PART) != BedPart.HEAD) {
+                pos = pos.offset(state.get(FACING));
+                state = world.getBlockState(pos);
+                if (!state.isOf(this)) {
+                    return ActionResult.CONSUME;
+                }
             }
-        });
-        return ActionResult.SUCCESS;
+
+            player.trySleep(pos).ifLeft(reason -> {
+                if (reason.getMessage() != null) {
+                    player.sendMessage(reason.getMessage(), true);
+                }
+            });
+            return ActionResult.SUCCESS;
+        }
     }
 
     @Override
@@ -230,5 +224,15 @@ public class TrimmedBedBlock extends HorizontalFacingBlock {
     @Override
     protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return null;
+    }
+
+    @Override
+    protected BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 }

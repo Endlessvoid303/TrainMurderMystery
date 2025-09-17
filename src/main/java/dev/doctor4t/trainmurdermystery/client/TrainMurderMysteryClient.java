@@ -136,6 +136,7 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         OptionLocker.overrideOption("gamma", 0d);
         OptionLocker.overrideOption("renderDistance", 32);
         OptionLocker.overrideOption("showSubtitles", false);
+        OptionLocker.overrideOption("autoJump", false);
         OptionLocker.overrideSoundCategoryVolume("music", 0.0);
         OptionLocker.overrideSoundCategoryVolume("record", 0.1);
         OptionLocker.overrideSoundCategoryVolume("weather", 1.0);

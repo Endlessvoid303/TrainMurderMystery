@@ -6,6 +6,7 @@
     "DedicatedPlayerManagerMixin",
     "HungerManagerMixin",
     "PlayerEntityMixin",
+    "ServerPlayerEntityMixin",
     "client.restrictions.DebugHudMixin"
   ],
   "injectors": {

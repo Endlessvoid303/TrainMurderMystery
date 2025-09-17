@@ -74,7 +74,9 @@ public class GameLoop {
         world.getGameRules().get(GameRules.DO_MOB_SPAWNING).set(false, world.getServer());
         world.getGameRules().get(GameRules.ANNOUNCE_ADVANCEMENTS).set(false, world.getServer());
         world.getGameRules().get(GameRules.DO_TRADER_SPAWNING).set(false, world.getServer());
+        world.getGameRules().get(GameRules.PLAYERS_SLEEPING_PERCENTAGE).set(9999, world.getServer());
         world.getServer().setDifficulty(Difficulty.PEACEFUL, true);
+        world.setTimeOfDay(18000);
 
         List<ServerPlayerEntity> playerPool = new ArrayList<>(world.getPlayers().stream().filter(serverPlayerEntity -> !serverPlayerEntity.isInCreativeMode() && !serverPlayerEntity.isSpectator()).toList());
 
