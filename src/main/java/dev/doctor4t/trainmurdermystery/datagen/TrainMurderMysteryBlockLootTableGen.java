@@ -147,6 +147,7 @@ public class TrainMurderMysteryBlockLootTableGen extends FabricBlockLootTablePro
         this.addSelfDrop(TMMBlocks.GOLD_ORNAMENT, this::ornamentDrops);
         this.addNothingDrop(TMMBlocks.SMALL_GLASS_DOOR);
         this.addNothingDrop(TMMBlocks.SMALL_WOOD_DOOR);
+        this.addNothingDrop(TMMBlocks.SMALL_TRAIN_DOOR);
     }
 
     private void addFamily(BlockFamily family) {

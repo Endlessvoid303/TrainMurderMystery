@@ -2,6 +2,7 @@ package dev.doctor4t.trainmurdermystery.mixin.client.ui;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,16 +36,20 @@ public abstract class TooltipBackgroundRendererMixin {
 
     @WrapMethod(method = "render")
     private static void render(DrawContext context, int x, int y, int width, int height, int z, Operation<Void> original) {
-        int i = x - 3;
-        int j = y - 3;
-        int k = width + 3 + 3;
-        int l = height + 3 + 3;
-        renderHorizontalLine(context, i, j - 1, k, z, BACKGROUND_COLOR);
-        renderHorizontalLine(context, i, j + l, k, z, BACKGROUND_COLOR);
-        renderRectangle(context, i, j, k, l, z, BACKGROUND_COLOR);
-        renderVerticalLine(context, i - 1, j, l, z, BACKGROUND_COLOR);
-        renderVerticalLine(context, i + k, j, l, z, BACKGROUND_COLOR);
-        renderBorder(context, i, j + 1, k, l, z);
+        if (TMMClient.isPlayerAliveAndInSurvival()) {
+            int i = x - 3;
+            int j = y - 3;
+            int k = width + 3 + 3;
+            int l = height + 3 + 3;
+            renderHorizontalLine(context, i, j - 1, k, z, BACKGROUND_COLOR);
+            renderHorizontalLine(context, i, j + l, k, z, BACKGROUND_COLOR);
+            renderRectangle(context, i, j, k, l, z, BACKGROUND_COLOR);
+            renderVerticalLine(context, i - 1, j, l, z, BACKGROUND_COLOR);
+            renderVerticalLine(context, i + k, j, l, z, BACKGROUND_COLOR);
+            renderBorder(context, i, j + 1, k, l, z);
+        } else {
+            original.call(context, x, y ,width, height, z);
+        }
     }
 
     @Unique

@@ -1,7 +1,7 @@
 package dev.doctor4t.trainmurdermystery.mixin.client.restrictions;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +16,7 @@ public abstract class KeyBindingMixin {
 
     @Unique
     private boolean shouldSuppressKey() {
-        if (TrainMurderMysteryClient.isPlayerAliveAndInSurvival()) {
+        if (TMMClient.isPlayerAliveAndInSurvival()) {
             return this.equals(MinecraftClient.getInstance().options.swapHandsKey) ||
                     this.equals(MinecraftClient.getInstance().options.chatKey) ||
                     this.equals(MinecraftClient.getInstance().options.commandKey) ||

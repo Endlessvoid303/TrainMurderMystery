@@ -2,7 +2,7 @@ package dev.doctor4t.trainmurdermystery.mixin.client.restrictions;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.client.gui.screen.ingame.LimitedInventoryScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,6 +20,6 @@ public abstract class MinecraftClientMixin {
 
     @WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 1))
     private void tmm$replaceInventoryScreenWithLimitedInventoryScreen(MinecraftClient instance, Screen screen, Operation<Void> original) {
-        original.call(instance, TrainMurderMysteryClient.isPlayerAliveAndInSurvival() ? new LimitedInventoryScreen(this.player) : screen);
+        original.call(instance, TMMClient.isPlayerAliveAndInSurvival() ? new LimitedInventoryScreen(this.player) : screen);
     }
 }

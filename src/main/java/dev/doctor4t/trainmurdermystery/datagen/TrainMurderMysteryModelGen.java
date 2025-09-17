@@ -314,8 +314,9 @@ public class TrainMurderMysteryModelGen extends FabricModelProvider {
         this.registerButton(generator, TMMBlocks.SMALL_BUTTON);
         this.registerButton(generator, TMMBlocks.ELEVATOR_BUTTON);
         this.registerOrnament(generator, TMMBlocks.GOLD_ORNAMENT);
-        this.registerParticleBlockWithItemSprite(generator, TMMBlocks.SMALL_WOOD_DOOR, TMMBlocks.TARNISHED_GOLD_PILLAR);
+        this.registerParticleBlockWithItemSprite(generator, TMMBlocks.SMALL_WOOD_DOOR, TMMBlocks.SMOOTH_EBONY);
         this.registerParticleBlockWithItemSprite(generator, TMMBlocks.SMALL_GLASS_DOOR, TMMBlocks.TARNISHED_GOLD_PILLAR);
+        this.registerParticleBlockWithItemSprite(generator, TMMBlocks.SMALL_TRAIN_DOOR, TMMBlocks.NAVY_STEEL);
         this.registerHullGlass(generator, TMMBlocks.HULL_GLASS);
         generator.registerSimpleCubeAll(TMMBlocks.RHOMBUS_HULL_GLASS);
         this.registerPrivacyGlassPanel(generator, TMMBlocks.PRIVACY_GLASS_PANEL);

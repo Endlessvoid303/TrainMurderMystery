@@ -4,7 +4,7 @@ import dev.doctor4t.trainmurdermystery.TMM;
 import dev.doctor4t.trainmurdermystery.block.SmallDoorBlock;
 import dev.doctor4t.trainmurdermystery.block.UnblastableDoorBlock;
 import dev.doctor4t.trainmurdermystery.block_entity.SmallDoorBlockEntity;
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.client.particle.HandParticle;
 import dev.doctor4t.trainmurdermystery.game.TMMGameLoop;
 import dev.doctor4t.trainmurdermystery.index.TMMDataComponentTypes;
@@ -66,7 +66,7 @@ public class RevolverItem extends Item {
                         0.5f, 8,
                         TMM.id("textures/particle/gunshot.png"),
                         17, false);
-                TrainMurderMysteryClient.handParticleManager.spawn(particle_animated);
+                TMMClient.handParticleManager.spawn(particle_animated);
 
                 return TypedActionResult.consume(user.getStackInHand(hand));
             } else {

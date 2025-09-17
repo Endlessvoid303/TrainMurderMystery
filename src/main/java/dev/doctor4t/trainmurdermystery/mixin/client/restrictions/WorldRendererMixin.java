@@ -2,7 +2,7 @@ package dev.doctor4t.trainmurdermystery.mixin.client.restrictions;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Colors;
@@ -13,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public class WorldRendererMixin {
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getTeamColorValue()I"))
     public int render(int original, @Local Entity entity) {
-        return TrainMurderMysteryClient.getTargets().contains(entity.getUuid()) ? Colors.RED : original;
+        return TMMClient.getTargets().contains(entity.getUuid()) ? Colors.RED : original;
     }
 }

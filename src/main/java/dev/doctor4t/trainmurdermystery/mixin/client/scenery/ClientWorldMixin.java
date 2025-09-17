@@ -1,6 +1,6 @@
 package dev.doctor4t.trainmurdermystery.mixin.client.scenery;
 
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.index.TMMParticles;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -38,7 +38,7 @@ public abstract class ClientWorldMixin extends World  {
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void tmm$addSnowflakes(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        if (TrainMurderMysteryClient.isTrainMoving()) {
+        if (TMMClient.isTrainMoving()) {
             ClientPlayerEntity player = client.player;
             Random random = player.getRandom();
             for (int i = 0; i < 200; i++) {

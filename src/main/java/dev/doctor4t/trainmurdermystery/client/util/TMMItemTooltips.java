@@ -1,6 +1,6 @@
 package dev.doctor4t.trainmurdermystery.client.util;
 
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.game.TMMGameLoop;
 import dev.doctor4t.trainmurdermystery.index.TMMDataComponentTypes;
 import dev.doctor4t.trainmurdermystery.index.TMMItems;
@@ -57,11 +57,11 @@ public class TMMItemTooltips {
 
                 tooltipList.add(Text.translatable(tooltipString + "1").withColor(LETTER_COLOR));
 
-                for (UUID target : TrainMurderMysteryClient.getTargets()) {
+                for (UUID target : TMMClient.getTargets()) {
                     PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(target);
 
                     UnaryOperator<Style> stylizer = style -> TMMGameLoop.isPlayerEliminated(player) ? style.withStrikethrough(true).withColor(0x1B8943) : style.withColor(0x8A1B29);
-                    PlayerListEntry playerListEntry = TrainMurderMysteryClient.PLAYER_ENTRIES_CACHE.get(target);
+                    PlayerListEntry playerListEntry = TMMClient.PLAYER_ENTRIES_CACHE.get(target);
                     if (playerListEntry != null)
                         tooltipList.add(Text.translatable(tooltipString + ".target", playerListEntry.getProfile().getName()).styled(stylizer));
                 }

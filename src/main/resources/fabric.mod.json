@@ -19,7 +19,7 @@
           "dev.doctor4t.trainmurdermystery.TMM"
 		],
 		"client": [
-			"dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient"
+			"dev.doctor4t.trainmurdermystery.client.TMMClient"
 		],
 		"fabric-datagen": [
 			"dev.doctor4t.trainmurdermystery.datagen.TrainMurderMysteryDatagen"

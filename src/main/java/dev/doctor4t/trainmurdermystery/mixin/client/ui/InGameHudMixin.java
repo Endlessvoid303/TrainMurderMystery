@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.doctor4t.trainmurdermystery.TMM;
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -24,33 +24,33 @@ public class InGameHudMixin {
 
     @WrapMethod(method = "renderStatusBars")
     private void tmm$removeStatusBars(DrawContext context, Operation<Void> original) {
-        if (!TrainMurderMysteryClient.isPlayerAliveAndInSurvival()) {
+        if (!TMMClient.isPlayerAliveAndInSurvival()) {
             original.call(context);
         }
     }
 
     @WrapMethod(method = "renderExperienceBar")
     private void tmm$removeExperienceBar(DrawContext context, int x, Operation<Void> original) {
-        if (!TrainMurderMysteryClient.isPlayerAliveAndInSurvival()) {
+        if (!TMMClient.isPlayerAliveAndInSurvival()) {
             original.call(context, x);
         }
     }
 
     @WrapMethod(method = "renderExperienceLevel")
     private void tmm$removeExperienceLevel(DrawContext context, RenderTickCounter tickCounter, Operation<Void> original) {
-        if (!TrainMurderMysteryClient.isPlayerAliveAndInSurvival()) {
+        if (!TMMClient.isPlayerAliveAndInSurvival()) {
             original.call(context, tickCounter);
         }
     }
 
     @WrapOperation(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 0))
     private void tmm$overrideHotbarTexture(DrawContext instance, Identifier texture, int x, int y, int width, int height, Operation<Void> original) {
-        original.call(instance, TrainMurderMysteryClient.isPlayerAliveAndInSurvival() ? TMM_HOTBAR_TEXTURE : texture, x, y, width, height);
+        original.call(instance, TMMClient.isPlayerAliveAndInSurvival() ? TMM_HOTBAR_TEXTURE : texture, x, y, width, height);
     }
 
     @WrapOperation(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 1))
     private void tmm$overrideHotbarSelectionTexture(DrawContext instance, Identifier texture, int x, int y, int width, int height, Operation<Void> original) {
-        original.call(instance, TrainMurderMysteryClient.isPlayerAliveAndInSurvival() ? TMM_HOTBAR_SELECTION_TEXTURE : texture, x, y, width, height);
+        original.call(instance, TMMClient.isPlayerAliveAndInSurvival() ? TMM_HOTBAR_SELECTION_TEXTURE : texture, x, y, width, height);
     }
 
     @WrapMethod(method = "renderSleepOverlay")

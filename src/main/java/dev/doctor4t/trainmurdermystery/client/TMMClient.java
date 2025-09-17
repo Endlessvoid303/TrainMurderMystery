@@ -41,7 +41,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
-public class TrainMurderMysteryClient implements ClientModInitializer {
+public class TMMClient implements ClientModInitializer {
     public static HandParticleManager handParticleManager;
     private static float trainSpeed;
     private static boolean prevGameRunning;
@@ -169,7 +169,7 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         });
 
         ClientTickEvents.END_CLIENT_TICK.register((client) -> {
-            TrainMurderMysteryClient.handParticleManager.tick();
+            TMMClient.handParticleManager.tick();
         });
 
         // Instinct keybind
@@ -282,6 +282,6 @@ public class TrainMurderMysteryClient implements ClientModInitializer {
         return isInstinctEnabled() && entityToHighlight instanceof PlayerEntity player && TMMGameLoop.isPlayerAliveAndSurvival(player);
     }
     public static boolean isInstinctEnabled() {
-        return TrainMurderMysteryClient.instinctKeybind.isPressed() && TrainMurderMysteryClient.isHitman() && TrainMurderMysteryClient.isPlayerAliveAndInSurvival();
+        return TMMClient.instinctKeybind.isPressed() && TMMClient.isHitman() && TMMClient.isPlayerAliveAndInSurvival();
     }
 }

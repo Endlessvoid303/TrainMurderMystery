@@ -1,7 +1,6 @@
 package dev.doctor4t.trainmurdermystery.mixin.client.items;
 
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
-import dev.doctor4t.trainmurdermystery.util.HandParticleManager;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
@@ -21,7 +20,7 @@ public class HeldItemRendererMixin {
             shift = At.Shift.AFTER))
     private void tmm$itemVFX(LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         if (renderMode.isFirstPerson()) {
-            TrainMurderMysteryClient.handParticleManager.render(matrices, vertexConsumers, light);
+            TMMClient.handParticleManager.render(matrices, vertexConsumers, light);
         }
     }
 }

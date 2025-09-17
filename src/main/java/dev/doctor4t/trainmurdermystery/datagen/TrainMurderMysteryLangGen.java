@@ -184,6 +184,7 @@ public class TrainMurderMysteryLangGen extends FabricLanguageProvider {
         builder.add(TMMBlocks.GOLD_ORNAMENT, "Golden Ornament");
         builder.add(TMMBlocks.SMALL_GLASS_DOOR, "Small Glass Door");
         builder.add(TMMBlocks.SMALL_WOOD_DOOR, "Small Wood Door");
+        builder.add(TMMBlocks.SMALL_TRAIN_DOOR, "Small Train Door");
         builder.add(TMMBlocks.NAVY_STEEL, "Navy Steel");
         builder.add(TMMBlocks.NAVY_STEEL_PANEL, "Navy Steel Panel");
         builder.add(TMMBlocks.NAVY_STEEL_TILES, "Navy Steel Tiles");
@@ -246,7 +247,7 @@ public class TrainMurderMysteryLangGen extends FabricLanguageProvider {
         builder.add("tip.lockpick.tooltip2", "Sneak-use on a door to jam it for 1 minute (disables the lockpick for 5 minutes)");
         builder.add("tip.revolver.rounds", "%s/6 rounds left");
         builder.add("tip.revolver.tooltip1", "Right-click to use, point and shoot");
-        builder.add("tip.revolver.tooltip2", "Can be used to shoot a door and open it permanently");
+        builder.add("tip.revolver.tooltip2", "Can be used to shoot a door and open it permanently (only glass and wooden doors)");
         builder.add("tip.body_bag.tooltip1", "Use on a dead body to bag it up and remove it");
 
         builder.add("game.win.hitmen", "All targets were eliminated: The Hitmen win!");

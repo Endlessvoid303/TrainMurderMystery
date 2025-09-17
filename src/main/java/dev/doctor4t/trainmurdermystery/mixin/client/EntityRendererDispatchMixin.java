@@ -2,7 +2,7 @@ package dev.doctor4t.trainmurdermystery.mixin.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.client.render.entity.PlayerBodyEntityRenderer;
 import dev.doctor4t.trainmurdermystery.entity.PlayerBodyEntity;
 import net.minecraft.client.network.PlayerListEntry;
@@ -42,7 +42,7 @@ public class EntityRendererDispatchMixin {
     @Inject(method = "getRenderer", at = @At("HEAD"), cancellable = true)
     public <T extends Entity> void tmm$addPlayerBodyRenderer(T entity, CallbackInfoReturnable<EntityRenderer<? super T>> cir) {
         if (entity instanceof PlayerBodyEntity body) {
-            PlayerListEntry playerListEntry = TrainMurderMysteryClient.PLAYER_ENTRIES_CACHE.get(body.getPlayerUuid());
+            PlayerListEntry playerListEntry = TMMClient.PLAYER_ENTRIES_CACHE.get(body.getPlayerUuid());
             if (playerListEntry == null) {
                 cir.setReturnValue((EntityRenderer<? super T>) this.bodyModelRenderers.get(SkinTextures.Model.WIDE));
             } else {

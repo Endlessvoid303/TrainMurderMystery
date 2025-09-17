@@ -2,7 +2,7 @@ package dev.doctor4t.trainmurdermystery.client.render.entity;
 
 import dev.doctor4t.ratatouille.client.lib.render.helpers.Easing;
 import dev.doctor4t.trainmurdermystery.TMM;
-import dev.doctor4t.trainmurdermystery.client.TrainMurderMysteryClient;
+import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.client.model.TrainMurderMysteryEntityModelLayers;
 import dev.doctor4t.trainmurdermystery.entity.PlayerBodyEntity;
 import net.minecraft.client.network.PlayerListEntry;
@@ -45,7 +45,7 @@ public class PlayerBodyEntityRenderer<T extends LivingEntity, M extends EntityMo
 
     @Override
     public Identifier getTexture(PlayerBodyEntity playerBodyEntity) {
-        PlayerListEntry playerListEntry = TrainMurderMysteryClient.PLAYER_ENTRIES_CACHE.get(playerBodyEntity.getPlayerUuid());
+        PlayerListEntry playerListEntry = TMMClient.PLAYER_ENTRIES_CACHE.get(playerBodyEntity.getPlayerUuid());
         if (playerListEntry != null) {
             return playerListEntry.getSkinTextures().texture();
         } else {
