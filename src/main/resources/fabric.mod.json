@@ -36,7 +36,8 @@
 		"cardinal-components": [
 			"trainmurdermystery:train",
 			"trainmurdermystery:game",
-			"trainmurdermystery:role"
+			"trainmurdermystery:role",
+			"trainmurdermystery:mood"
 		]
 	},
 	"depends": {

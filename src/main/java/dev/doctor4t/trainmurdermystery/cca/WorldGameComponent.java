@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 import java.util.ArrayList;
@@ -66,11 +67,11 @@ public class WorldGameComponent implements AutoSyncedComponent {
     }
 
     public boolean isRunning() {
-        return running;
+        return this.running;
     }
 
     public List<UUID> getHitmen() {
-        return hitmen;
+        return this.hitmen;
     }
 
     public void addHitman(PlayerEntity hitman) {
@@ -86,7 +87,7 @@ public class WorldGameComponent implements AutoSyncedComponent {
     }
 
     public List<UUID> getDetectives() {
-        return detectives;
+        return this.detectives;
     }
 
     public void addDetective(PlayerEntity detective) {
@@ -102,7 +103,7 @@ public class WorldGameComponent implements AutoSyncedComponent {
     }
 
     public List<UUID> getTargets() {
-        return targets;
+        return this.targets;
     }
 
     public void addTarget(PlayerEntity target) {
@@ -115,6 +116,10 @@ public class WorldGameComponent implements AutoSyncedComponent {
 
     public void setTargets(List<UUID> targets) {
         this.targets = targets;
+    }
+
+    public boolean isCivilian(@NotNull PlayerEntity player) {
+        return !this.hitmen.contains(player.getUuid()) && !this.detectives.contains(player.getUuid());
     }
 
     public void resetLists() {
@@ -145,7 +150,7 @@ public class WorldGameComponent implements AutoSyncedComponent {
 
     @Override
     public void writeToNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
-        nbtCompound.putBoolean("Running", running);
+        nbtCompound.putBoolean("Running", this.running);
 
         nbtCompound.putInt("FadeIn", fadeIn);
         nbtCompound.putInt("FadeOut", fadeOut);

@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.doctor4t.trainmurdermystery.TMM;
+import dev.doctor4t.trainmurdermystery.cca.PlayerMoodComponent;
 import dev.doctor4t.trainmurdermystery.client.TMMClient;
 import dev.doctor4t.trainmurdermystery.game.TMMGameConstants;
 import dev.doctor4t.trainmurdermystery.game.TMMGameLoop;
@@ -18,6 +19,8 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 
@@ -26,6 +29,13 @@ public class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
     private static final Identifier TMM_HOTBAR_TEXTURE = TMM.id("hud/hotbar");
     private static final Identifier TMM_HOTBAR_SELECTION_TEXTURE = TMM.id("hud/hotbar_selection");
+
+    @Inject(method = "renderMainHud", at = @At("TAIL"))
+    private void tmm$renderMood(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        var player = this.client.player;
+        if (player == null) return;
+        PlayerMoodComponent.KEY.get(player).renderHud(context, tickCounter);
+    }
 
     @WrapMethod(method = "renderStatusBars")
     private void tmm$removeStatusBars(DrawContext context, Operation<Void> original) {
