@@ -12,18 +12,18 @@ import org.ladysnake.cca.api.v3.world.WorldComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.world.WorldComponentInitializer;
 
 public class TMMComponents implements WorldComponentInitializer, EntityComponentInitializer {
-    public static final ComponentKey<WorldTrainComponent> TRAIN = ComponentRegistry.getOrCreate(TMM.id("train"), WorldTrainComponent.class);
-    public static final ComponentKey<WorldGameComponent> GAME = ComponentRegistry.getOrCreate(TMM.id("game"), WorldGameComponent.class);
+    public static final ComponentKey<TrainWorldComponent> TRAIN = ComponentRegistry.getOrCreate(TMM.id("train"), TrainWorldComponent.class);
+    public static final ComponentKey<GameWorldComponent> GAME = ComponentRegistry.getOrCreate(TMM.id("game"), GameWorldComponent.class);
 
     @Override
     public void registerWorldComponentFactories(@NotNull WorldComponentFactoryRegistry registry) {
-        registry.register(TRAIN, WorldTrainComponent::new);
-        registry.register(GAME, WorldGameComponent::new);
+        registry.register(TRAIN, TrainWorldComponent::new);
+        registry.register(GAME, GameWorldComponent::new);
     }
 
     @Override
     public void registerEntityComponentFactories(@NotNull EntityComponentFactoryRegistry registry) {
         registry.beginRegistration(PlayerEntity.class, PlayerMoodComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PlayerMoodComponent::new);
-        registry.beginRegistration(PlayerEntity.class, PlayerPoisonComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PlayerPoisonComponent::new);
+        registry.beginRegistration(PlayerEntity.class, PlayerStoreComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PlayerStoreComponent::new);
     }
 }
