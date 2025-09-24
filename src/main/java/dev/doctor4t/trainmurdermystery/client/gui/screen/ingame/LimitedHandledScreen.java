@@ -298,10 +298,6 @@ public abstract class LimitedHandledScreen<T extends ScreenHandler> extends Scre
                     k = slot.id;
                 }
 
-                if (bl2) {
-                    k = -999;
-                }
-
                 if (this.client.options.getTouchscreen().getValue() && bl2 && this.handler.getCursorStack().isEmpty()) {
                     this.close();
                     return true;
@@ -322,10 +318,6 @@ public abstract class LimitedHandledScreen<T extends ScreenHandler> extends Scre
                                 this.onMouseClick(slot, k, button, SlotActionType.CLONE);
                             } else {
                                 SlotActionType slotActionType = SlotActionType.PICKUP;
-                                if (k == -999) {
-                                    slotActionType = SlotActionType.THROW;
-                                }
-
                                 this.onMouseClick(slot, k, button, slotActionType);
                             }
 
@@ -417,14 +409,9 @@ public abstract class LimitedHandledScreen<T extends ScreenHandler> extends Scre
         Slot slot = this.getSlotAt(mouseX, mouseY);
         int i = this.x;
         int j = this.y;
-        boolean bl = this.isClickOutsideBounds(mouseX, mouseY, i, j, button);
         int k = GLFW.GLFW_KEY_UNKNOWN;
         if (slot != null) {
             k = slot.id;
-        }
-
-        if (bl) {
-            k = -999;
         }
 
         if (this.doubleClicking && slot != null && button == 0 && this.handler.canInsertIntoSlot(ItemStack.EMPTY, slot)) {
@@ -544,8 +531,6 @@ public abstract class LimitedHandledScreen<T extends ScreenHandler> extends Scre
             if (this.focusedSlot != null && this.focusedSlot.hasStack()) {
                 if (this.client.options.pickItemKey.matchesKey(keyCode, scanCode)) {
                     this.onMouseClick(this.focusedSlot, this.focusedSlot.id, 0, SlotActionType.CLONE);
-                } else if (this.client.options.dropKey.matchesKey(keyCode, scanCode)) {
-                    this.onMouseClick(this.focusedSlot, this.focusedSlot.id, hasControlDown() ? 1 : 0, SlotActionType.THROW);
                 }
             }
 

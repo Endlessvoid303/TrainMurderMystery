@@ -85,14 +85,17 @@ public class TMM implements ModInitializer {
 //  (new task system is more meant to make players vulnerable to the hitman in a different way from splitting them up)
 // TODO: - Get a snack from restaurant task (food platter block + food items)
 // TODO: - Get a drink from the bar task (drink tray block + custom drink items)
-// TODO: - Sleeping task requiring you to sleep for 10s
-// TODO: - Get some fresh air reduced to going walking outside for 10s
-// TODO: - Change mood down effect from speed to something else (to prevent players being able to innocent each other on an easily observable change)
+// TODO: - Sleeping task requiring you to sleep for 8s
+// TODO: - Get some fresh air reduced to going walking outside for 8s
+// TODO: - Change mood down effect from speed to: (to prevent players being able to innocent each other on an easily observable change)
+// TODO:    - Not seeing bodies at mid mood + a little more shake
+// TODO:    - Randomly seeing players as psycho + even more shake
 
 // TORECORD: Fixing the hitman
 // TORECORD: Remove target system and make the win condition a kill count, turning him into a psycho
 // TORECORD: New name display system to allow anyone to know player's names, displays "psycho cohort" for other psychos, and instinct now shows other psychos instead of targets, game recognizes game
 // TORECORD: Hitman item shop
+// TODO: Change currency, don't want dollars cause european train, but euros are too modern for it, so make custom currency icon
 // TORECORD: Fixing the knife (now with a kill indicator)
 // TORECORD: New name system shows who else is the hitman allowing them to scheme together
 // TODO: - Explosive for clumped up people (foils the grouping up cheese)
@@ -114,13 +117,8 @@ public class TMM implements ModInitializer {
 // TORECORD: Fixing the map
 // TODO: Rearrange the train cars to prevent all POIs being separated by all the sleeping cars
 
-// TORECORD: Adding a system to favour players for roles
-// TODO: System that remembers previous roles and allows cycling of roles (Amy)
-
-// Various tweaks who don't need to be recorded
-// TODO: Fix spectators being shot by guns (Amy)
-
 // TORECORD: Polish
 // TODO: Train chimney smoke + ringable horn, triggers game start in lobby and end of game
 // TORECORD: Players collide with each other (Amy)
 // TODO: Louder footsteps
+// TORECORD: System that remembers previous roles and allows cycling of roles (Amy)

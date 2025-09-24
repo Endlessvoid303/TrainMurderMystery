@@ -1,14 +1,17 @@
 package dev.doctor4t.trainmurdermystery.cca;
 
 import dev.doctor4t.trainmurdermystery.TMM;
-import dev.doctor4t.trainmurdermystery.client.animation.Interpolations;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.index.TMMItems;
 import dev.doctor4t.trainmurdermystery.util.ShopEntry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
@@ -21,10 +24,12 @@ public class PlayerPsychoComponent implements AutoSyncedComponent, ServerTicking
 
     private final PlayerEntity player;
     public int psychoTicks = 0;
+
     public void setPsychoTicks(int ticks) {
         this.psychoTicks = ticks;
         this.sync();
     }
+
     public int getPsychoTicks() {
         return this.psychoTicks;
     }
@@ -44,17 +49,33 @@ public class PlayerPsychoComponent implements AutoSyncedComponent, ServerTicking
 
     @Override
     public void clientTick() {
-        this.psychoTicks--;
+        if (--this.psychoTicks > 0) {
+            Item bat = TMMItems.BAT;
+            if (!player.getMainHandStack().isOf(bat)) {
+                for (int i = 0; i < 9; i++) {
+                    if (player.getInventory().getStack(i).isOf(bat)) {
+                        player.getInventory().selectedSlot = i;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void serverTick() {
         if (this.psychoTicks > 0) {
+            if (psychoTicks % 20 == 0) {
+                player.sendMessage(Text.translatable("game.psycho_mode.time", this.psychoTicks / 20).withColor(Colors.RED), true);
+            }
+
             if (--this.psychoTicks == 0) {
+                player.sendMessage(Text.translatable("game.psycho_mode.over").withColor(Colors.RED), true);
                 stopPsycho();
             }
+
+            this.sync();
         }
-        this.sync();
     }
 
     public void stopPsycho() {
