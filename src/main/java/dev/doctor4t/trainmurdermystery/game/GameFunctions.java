@@ -118,7 +118,7 @@ public class GameFunctions {
         // teleport players to play area
         List<ServerPlayerEntity> playerPool = world.getPlayers(serverPlayerEntity -> !serverPlayerEntity.isInCreativeMode() && !serverPlayerEntity.isSpectator() && (GameConstants.READY_AREA.contains(serverPlayerEntity.getPos())));
         for (ServerPlayerEntity player : playerPool) {
-            Vec3d pos = player.getPos().add(Vec3d.of(GameConstants.PLAY_POS.subtract(BlockPos.ofFloored(GameConstants.READY_AREA.getMinPos()))));
+            Vec3d pos = player.getPos().add(GameConstants.PLAY_OFFSET);
             player.requestTeleport(pos.getX(), pos.getY(), pos.getZ());
         }
 

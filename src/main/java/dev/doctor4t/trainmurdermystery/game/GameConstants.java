@@ -54,7 +54,7 @@ public interface GameConstants {
     // Game areas
     Vec3d SPAWN_POS = new Vec3d(-872.5, 0, -323);
     Box READY_AREA = new Box(-1017, -1, -364, -813, 3, -358);
-    BlockPos PLAY_POS = new BlockPos(-19, 122, -539);
+    Vec3d PLAY_OFFSET = new Vec3d(963, 121, -175);
     Consumer<ServerPlayerEntity> SPECTATOR_TP = serverPlayerEntity -> serverPlayerEntity.teleport(serverPlayerEntity.getServerWorld(), -68, 133, -535.5, -90, 15);
     Box PLAY_AREA = new Box(-140, 118, -535.5f - 15, 230, 200, -535.5f + 15);
     Box BACKUP_TRAIN_LOCATION = new Box(-57, 64, -531, 177, 74, -541);
