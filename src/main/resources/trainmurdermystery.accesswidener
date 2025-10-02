@@ -23,6 +23,7 @@ accessible field net/minecraft/client/gui/DrawContext guiAtlasManager Lnet/minec
 
 accessible field net/minecraft/entity/player/PlayerInventory combinedInventory Ljava/util/List;
 
+accessible method net/minecraft/client/gui/DrawContext drawTexturedQuad (Lnet/minecraft/util/Identifier;IIIIIFFFFFFFF)V
 
 
 

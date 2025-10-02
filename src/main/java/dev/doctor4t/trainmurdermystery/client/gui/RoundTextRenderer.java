@@ -1,22 +1,30 @@
 package dev.doctor4t.trainmurdermystery.client.gui;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.doctor4t.trainmurdermystery.cca.PlayerEndInfoComponent;
+import dev.doctor4t.trainmurdermystery.cca.GameRoundEndComponent;
 import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.game.GameFunctions;
+import net.minecraft.block.entity.SkullBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.SkinTextures;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class RoundTextRenderer {
+    private static final Map<String, Optional<GameProfile>> failCache = new HashMap<>();
     private static final int WELCOME_DURATION = 200 + GameConstants.FADE_TIME * 2 + GameConstants.FADE_PAUSE;
     private static final int END_DURATION = 200;
     private static RoleAnnouncementText role = RoleAnnouncementText.CIVILIAN;
@@ -45,13 +53,11 @@ public class RoundTextRenderer {
             context.getMatrices().pop();
         }
         var game = TMMComponents.GAME.get(player.getWorld());
-        if (endTime > 0 && !game.isRunning()) {
-            if (game.lastWinStatus == GameFunctions.WinStatus.NONE) return;
-            var past = PlayerEndInfoComponent.KEY.get(player);
-            if (past.role == RoleAnnouncementText.BLANK) return;
-            var endText = role.getEndText(game.lastWinStatus);
+        if (true || endTime > 0 && !game.isRunning()) {
+            var roundEnd = GameRoundEndComponent.KEY.get(player.getWorld());
+            if (roundEnd.getWinStatus() == GameFunctions.WinStatus.NONE) return;
+            var endText = role.getEndText(roundEnd.getWinStatus());
             if (endText == null) return;
-            var endMessage = game.lastWinStatus.name().toLowerCase();
             context.getMatrices().push();
             context.getMatrices().translate(context.getScaledWindowWidth() / 2f, context.getScaledWindowHeight() / 2f - 40, 0);
             context.getMatrices().push();
@@ -60,18 +66,13 @@ public class RoundTextRenderer {
             context.getMatrices().pop();
             context.getMatrices().push();
             context.getMatrices().scale(1.2f, 1.2f, 1f);
-            var winMessage = Text.translatable("game.win." + endMessage.toLowerCase());
+            var winMessage = Text.translatable("game.win." + roundEnd.getWinStatus().name().toLowerCase().toLowerCase());
             context.drawTextWithShadow(renderer, winMessage, -renderer.getWidth(winMessage) / 2, -4, 0xFFFFFF);
             context.getMatrices().pop();
             context.getMatrices().push();
             context.getMatrices().scale(1f, 1f, 1f);
             var vigilanteTotal = 1;
-            for (var entry : player.networkHandler.getPlayerList()) {
-                var pastPlayer = player.getWorld().getPlayerByUuid(entry.getProfile().getId());
-                if (pastPlayer == null) continue;
-                var endInfo = PlayerEndInfoComponent.KEY.get(pastPlayer);
-                if (endInfo.role == RoleAnnouncementText.VIGILANTE) vigilanteTotal += 1;
-            }
+            for (var entry : roundEnd.getPlayers()) if (entry.role() == RoleAnnouncementText.VIGILANTE) vigilanteTotal += 1;
             context.drawTextWithShadow(renderer, RoleAnnouncementText.CIVILIAN.titleText, -renderer.getWidth(RoleAnnouncementText.CIVILIAN.titleText) / 2 - 60, 14, 0xFFFFFF);
             context.drawTextWithShadow(renderer, RoleAnnouncementText.VIGILANTE.titleText, -renderer.getWidth(RoleAnnouncementText.VIGILANTE.titleText) / 2 + 50, 14, 0xFFFFFF);
             context.drawTextWithShadow(renderer, RoleAnnouncementText.KILLER.titleText, -renderer.getWidth(RoleAnnouncementText.KILLER.titleText) / 2 + 50, 14 + 16 + 24 * ((vigilanteTotal) / 2), 0xFFFFFF);
@@ -79,15 +80,10 @@ public class RoundTextRenderer {
             var civilians = 0;
             var vigilantes = 0;
             var killers = 0;
-            for (var entry : player.networkHandler.getPlayerList()) {
-                var pastPlayer = player.getWorld().getPlayerByUuid(entry.getProfile().getId());
-                if (pastPlayer == null) continue;
-                var name = pastPlayer.getDisplayName();
-                if (name == null) continue;
+            for (var entry : roundEnd.getPlayers()) {
                 context.getMatrices().push();
                 context.getMatrices().scale(2f, 2f, 1f);
-                var endInfo = PlayerEndInfoComponent.KEY.get(pastPlayer);
-                switch (endInfo.role) {
+                switch (entry.role()) {
                     case CIVILIAN -> {
                         context.getMatrices().translate(-60 + (civilians % 4) * 12, 14 + (civilians / 4) * 12, 0);
                         civilians++;
@@ -102,19 +98,19 @@ public class RoundTextRenderer {
                         killers++;
                     }
                 }
-                var texture = entry.getSkinTextures();
+                var texture = getSkinTextures(entry.player().getName());
                 if (texture != null) {
                     RenderSystem.enableBlend();
                     context.getMatrices().push();
                     context.getMatrices().translate(8, 0, 0);
-                    context.drawTexture(texture.texture(), 0, 0, 8, 8, 8, 8, 8, 8, 64, 64);
+                    var offColour = entry.wasDead() ? 0.4f : 1f;
+                    context.drawTexturedQuad(texture.texture(), 0, 8, 0, 8, 0, 8 / 64f, 16 / 64f, 8 / 64f, 16 / 64f, 1f, offColour, offColour, 1f);
                     context.getMatrices().translate(-0.5, -0.5, 0);
                     context.getMatrices().scale(1.125f, 1.125f, 1f);
-                    context.drawTexture(texture.texture(), 0, 0, 8, 8, 40, 8, 8, 8, 64, 64);
+                    context.drawTexturedQuad(texture.texture(), 0, 8, 0, 8, 0, 40 / 64f, 48 / 64f, 8 / 64f, 16 / 64f, 1f, offColour, offColour, 1f);
                     context.getMatrices().pop();
                 }
-                if (endInfo.wasDead) {
-                    context.fill(8, 0, 16, 8, 0x80880000);
+                if (entry.wasDead()) {
                     context.getMatrices().translate(13, 0, 0);
                     context.getMatrices().scale(2f, 1f, 1f);
                     context.drawText(renderer, "x", -renderer.getWidth("x") / 2, 0, 0xBB1010, false);
@@ -168,5 +164,18 @@ public class RoundTextRenderer {
 
     public static void startEnd() {
         endTime = END_DURATION;
+    }
+
+    public static GameProfile getGameProfile(String disguise) {
+        var optional = SkullBlockEntity.fetchProfileByName(disguise).getNow(failCache(disguise));
+        return optional.orElse(failCache(disguise).get());
+    }
+
+    public static SkinTextures getSkinTextures(String disguise) {
+        return MinecraftClient.getInstance().getSkinProvider().getSkinTextures(getGameProfile(disguise));
+    }
+
+    public static Optional<GameProfile> failCache(String name) {
+        return failCache.computeIfAbsent(name, (d) -> Optional.of(new GameProfile(UUID.randomUUID(), name)));
     }
 }

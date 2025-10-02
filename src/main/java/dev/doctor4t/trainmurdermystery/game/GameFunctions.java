@@ -231,7 +231,6 @@ public class GameFunctions {
 
         // reset all player data
         for (var player : world.getPlayers()) {
-            PlayerEndInfoComponent.KEY.get(player).renew();
             ServerPlayNetworking.send(player, new AnnounceEndingPayload());
             player.dismountVehicle();
             player.getInventory().clear();

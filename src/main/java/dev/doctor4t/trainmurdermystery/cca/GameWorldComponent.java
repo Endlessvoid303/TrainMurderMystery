@@ -25,7 +25,6 @@ import java.util.UUID;
 
 public class GameWorldComponent implements AutoSyncedComponent, ClientTickingComponent, ServerTickingComponent {
     private final World world;
-    public GameFunctions.WinStatus lastWinStatus = GameFunctions.WinStatus.NONE;
 
     public enum GameStatus {
         INACTIVE, STARTING, ACTIVE, STOPPING
@@ -166,8 +165,6 @@ public class GameWorldComponent implements AutoSyncedComponent, ClientTickingCom
 
         this.setKillers(uuidListFromNbt(nbtCompound, "Killers"));
         this.setVigilantes(uuidListFromNbt(nbtCompound, "Vigilantes"));
-
-        this.lastWinStatus = GameFunctions.WinStatus.values()[nbtCompound.getInt("LastWinStatus")];
     }
 
     private ArrayList<UUID> uuidListFromNbt(NbtCompound nbtCompound, String listName) {
@@ -188,8 +185,6 @@ public class GameWorldComponent implements AutoSyncedComponent, ClientTickingCom
 
         nbtCompound.put("Killers", nbtFromUuidList(getKillers()));
         nbtCompound.put("Vigilantes", this.nbtFromUuidList(this.getVigilantes()));
-
-        nbtCompound.putInt("LastWinStatus", this.lastWinStatus.ordinal());
     }
 
     private NbtList nbtFromUuidList(List<UUID> list) {
@@ -278,12 +273,12 @@ public class GameWorldComponent implements AutoSyncedComponent, ClientTickingCom
 
                 // win display
                 if (winStatus != GameFunctions.WinStatus.NONE && this.gameStatus == GameStatus.ACTIVE) {
+                    GameRoundEndComponent.KEY.get(serverWorld).setRoundEndData(serverWorld.getPlayers(), winStatus);
                     for (ServerPlayerEntity player : serverWorld.getPlayers()) {
                         player.sendMessage(Text.translatable("game.win." + winStatus.name().toLowerCase(Locale.ROOT)), true);
                         if (winStatus == GameFunctions.WinStatus.TIME && this.isKiller(player)) GameFunctions.killPlayer(player, true, null);
                     }
                     GameFunctions.stopGame(serverWorld);
-                    this.lastWinStatus = winStatus;
                 }
             }
         }

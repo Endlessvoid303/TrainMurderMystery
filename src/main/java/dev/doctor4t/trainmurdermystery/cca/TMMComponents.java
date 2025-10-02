@@ -23,6 +23,7 @@ public class TMMComponents implements WorldComponentInitializer, EntityComponent
         registry.register(GAME, GameWorldComponent::new);
         registry.register(WorldBlackoutComponent.KEY, WorldBlackoutComponent::new);
         registry.register(GameTimeComponent.KEY, GameTimeComponent::new);
+        registry.register(GameRoundEndComponent.KEY, GameRoundEndComponent::new);
     }
 
     @Override
@@ -32,11 +33,10 @@ public class TMMComponents implements WorldComponentInitializer, EntityComponent
         registry.beginRegistration(PlayerEntity.class, PlayerPoisonComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PlayerPoisonComponent::new);
         registry.beginRegistration(PlayerEntity.class, PlayerPsychoComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PlayerPsychoComponent::new);
         registry.beginRegistration(PlayerEntity.class, PlayerNoteComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PlayerNoteComponent::new);
-        registry.beginRegistration(PlayerEntity.class, PlayerEndInfoComponent.KEY).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PlayerEndInfoComponent::new);
     }
 
     @Override
-    public void registerScoreboardComponentFactories(ScoreboardComponentFactoryRegistry registry) {
+    public void registerScoreboardComponentFactories(@NotNull ScoreboardComponentFactoryRegistry registry) {
         registry.registerScoreboardComponent(ScoreboardRoleSelectorComponent.KEY, ScoreboardRoleSelectorComponent::new);
     }
 }
