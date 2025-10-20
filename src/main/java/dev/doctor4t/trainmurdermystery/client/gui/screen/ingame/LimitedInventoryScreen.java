@@ -1,7 +1,7 @@
 package dev.doctor4t.trainmurdermystery.client.gui.screen.ingame;
 
 import dev.doctor4t.trainmurdermystery.TMM;
-import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
+import dev.doctor4t.trainmurdermystery.cca.GameWorldComponent;
 import dev.doctor4t.trainmurdermystery.client.gui.StoreRenderer;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.util.ShopEntry;
@@ -29,7 +29,7 @@ public class LimitedInventoryScreen extends LimitedHandledScreen<PlayerScreenHan
     @Override
     protected void init() {
         super.init();
-        if (!TMMComponents.GAME.get(this.player.getWorld()).isKiller(this.player)) return;
+        if (!GameWorldComponent.KEY.get(this.player.getWorld()).isKiller(this.player)) return;
         var entries = GameConstants.SHOP_ENTRIES;
         int apart = 38;
         var x = this.width / 2 - entries.size() * apart / 2 + 9;

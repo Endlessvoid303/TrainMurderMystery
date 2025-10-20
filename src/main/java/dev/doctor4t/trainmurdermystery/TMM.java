@@ -3,19 +3,21 @@ package dev.doctor4t.trainmurdermystery;
 import com.google.common.reflect.Reflection;
 import dev.doctor4t.trainmurdermystery.block.DoorPartBlock;
 import dev.doctor4t.trainmurdermystery.command.*;
+import dev.doctor4t.trainmurdermystery.command.argument.TMMGameModeArgumentType;
+import dev.doctor4t.trainmurdermystery.command.argument.TimeOfDayArgumentType;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.index.*;
 import dev.doctor4t.trainmurdermystery.util.*;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.Blocks;
+import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
-import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,19 +43,18 @@ public class TMM implements ModInitializer {
         TMMBlockEntities.initialize();
         TMMParticles.initialize();
 
+        // Register command argument types
+        ArgumentTypeRegistry.registerArgumentType(id("timeofday"), TimeOfDayArgumentType.class, ConstantArgumentSerializer.of(TimeOfDayArgumentType::timeofday));
+        ArgumentTypeRegistry.registerArgumentType(id("gamemode"), TMMGameModeArgumentType.class, ConstantArgumentSerializer.of(TMMGameModeArgumentType::gamemode));
+
         // Register commands
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             GiveRoomKeyCommand.register(dispatcher);
             SetTrainSpeedCommand.register(dispatcher);
             StartCommand.register(dispatcher);
-            TestStartGameCommand.register(dispatcher);
-            StartDiscoveryCommand.register(dispatcher);
-            StartLooseEndsCommand.register(dispatcher);
             StopCommand.register(dispatcher);
-            ForceStop.register(dispatcher);
             ResetWeightsCommand.register(dispatcher);
-            ToggleSnowCommand.register(dispatcher);
-            ToggleNightCommand.register(dispatcher);
+            SetVisualCommand.register(dispatcher);
             ForceRoleCommand.register(dispatcher);
         }));
 

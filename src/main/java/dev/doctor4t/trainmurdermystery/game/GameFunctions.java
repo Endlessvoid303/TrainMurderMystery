@@ -81,52 +81,43 @@ public class GameFunctions {
         }
     }
 
-    public static void startGame(ServerWorld world, GameWorldComponent.GameMode gameMode) {
-        GameWorldComponent component = TMMComponents.GAME.get(world);
+    public static void startGame(ServerWorld world, GameWorldComponent.GameMode gameMode, int time) {
+        GameWorldComponent component = GameWorldComponent.KEY.get(world);
         int playerCount = Math.toIntExact(world.getPlayers().stream().filter(serverPlayerEntity -> (GameConstants.READY_AREA.contains(serverPlayerEntity.getPos()))).count());
         component.setGameMode(gameMode);
+        GameTimeComponent.KEY.get(world).setResetTime(time);
 
         if (playerCount >= 6 || gameMode != GameWorldComponent.GameMode.MURDER) {
             component.setGameStatus(GameWorldComponent.GameStatus.STARTING);
         } else {
             for (ServerPlayerEntity player : world.getPlayers()) {
-                player.sendMessage(Text.translatable("game.not_enough_players"), true);
+                player.sendMessage(Text.translatable("game.start_error.not_enough_players"), true);
             }
         }
     }
 
     public static void stopGame(ServerWorld world) {
-        GameWorldComponent component = TMMComponents.GAME.get(world);
+        GameWorldComponent component = GameWorldComponent.KEY.get(world);
         component.setGameStatus(GameWorldComponent.GameStatus.STOPPING);
     }
 
-    public static void testStart(ServerWorld world) {
-        GameWorldComponent gameWorldComponent = TMMComponents.GAME.get(world);
-        gameWorldComponent.setGameMode(GameWorldComponent.GameMode.MURDER);
-
-        initializeGame(world);
-
-        List<UUID> killers = gameWorldComponent.getKillers();
-        killers.add(UUID.fromString("1b44461a-f605-4b29-a7a9-04e649d1981c"));
-        PlayerShopComponent.KEY.get(world.getPlayerByUuid(UUID.fromString("1b44461a-f605-4b29-a7a9-04e649d1981c"))).addToBalance(9999);
-        gameWorldComponent.setKillers(killers);
-        gameWorldComponent.sync();
-    }
-
     public static void initializeGame(ServerWorld world) {
-        GameWorldComponent gameComponent = TMMComponents.GAME.get(world);
-        TrainWorldComponent trainComponent = TMMComponents.TRAIN.get(world);
+        GameWorldComponent gameComponent = GameWorldComponent.KEY.get(world);
+        TrainWorldComponent trainComponent = TrainWorldComponent.KEY.get(world);
         List<ServerPlayerEntity> players = world.getPlayers(serverPlayerEntity -> GameConstants.READY_AREA.contains(serverPlayerEntity.getPos()));
 
         GameWorldComponent.GameMode gameMode = gameComponent.getGameMode();
         boolean isMurder = gameMode == GameWorldComponent.GameMode.MURDER;
-        trainComponent.setNight(isMurder);
+
+        trainComponent.setTimeOfDay(switch (gameMode) {
+            case MURDER -> TrainWorldComponent.TimeOfDay.NIGHT;
+            case DISCOVERY -> TrainWorldComponent.TimeOfDay.DAY;
+            case LOOSE_ENDS -> TrainWorldComponent.TimeOfDay.DUSK;
+        });
         trainComponent.setSnow(true);
         baseInitialize(world, trainComponent, gameComponent, players);
 
         if (gameMode == GameWorldComponent.GameMode.LOOSE_ENDS) {
-            GameTimeComponent.KEY.get(world).setTime(GameConstants.getInTicks(60, 0));
-
             for (ServerPlayerEntity player : players) {
                 player.getInventory().clear();
 
@@ -268,9 +259,9 @@ public class GameFunctions {
 
     public static void finalizeGame(ServerWorld world) {
         WorldBlackoutComponent.KEY.get(world).reset();
-        TrainWorldComponent trainComponent = TMMComponents.TRAIN.get(world);
+        TrainWorldComponent trainComponent = TrainWorldComponent.KEY.get(world);
         trainComponent.setTrainSpeed(0);
-        trainComponent.setNight(false);
+        trainComponent.setTimeOfDay(TrainWorldComponent.TimeOfDay.DAY);
 
         // reset train
         tryResetTrain(world);
@@ -301,7 +292,7 @@ public class GameFunctions {
 
         // reset game component
         GameTimeComponent.KEY.get(world).reset();
-        var gameComponent = TMMComponents.GAME.get(world);
+        var gameComponent = GameWorldComponent.KEY.get(world);
         gameComponent.resetKillerList();
         gameComponent.resetVigilanteList();
         gameComponent.setGameStatus(GameWorldComponent.GameStatus.INACTIVE);
@@ -371,7 +362,7 @@ public class GameFunctions {
             }
         }
 
-        var gameWorldComponent = TMMComponents.GAME.get(victim.getWorld());
+        var gameWorldComponent = GameWorldComponent.KEY.get(victim.getWorld());
         if (gameWorldComponent.isCivilian(victim)) {
             GameTimeComponent.KEY.get(victim.getWorld()).addTime(GameConstants.TIME_ON_CIVILIAN_KILL);
         }

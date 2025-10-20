@@ -1,6 +1,6 @@
 package dev.doctor4t.trainmurdermystery.client.gui;
 
-import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
+import dev.doctor4t.trainmurdermystery.cca.GameWorldComponent;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LobbyPlayersRenderer {
     public static void renderHud(TextRenderer renderer, @NotNull ClientPlayerEntity player, @NotNull DrawContext context) {
-        var game = TMMComponents.GAME.get(player.getWorld());
+        var game = GameWorldComponent.KEY.get(player.getWorld());
         if (!game.isRunning()) {
             context.getMatrices().push();
             context.getMatrices().translate(context.getScaledWindowWidth() / 2f, 6, 0);

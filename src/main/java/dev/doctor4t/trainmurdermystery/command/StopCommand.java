@@ -10,6 +10,11 @@ public class StopCommand {
     public static void register(@NotNull CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(CommandManager.literal("tmm:stop")
                 .requires(source -> source.hasPermissionLevel(2))
+                .then(CommandManager.literal("force").executes(context -> {
+                            GameFunctions.finalizeGame(context.getSource().getWorld());
+                            return 1;
+                        }
+                ))
                 .executes(context -> {
                     GameFunctions.stopGame(context.getSource().getWorld());
                     return 1;

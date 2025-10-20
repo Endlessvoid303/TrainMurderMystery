@@ -32,7 +32,7 @@ public abstract class MountableBlock extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         float radius = 1;
         if (!player.isSneaking()
-                && !player.hasVehicle()
+                && player.getPos().subtract(pos.toCenterPos()).length() <= 1.5f
                 && !(player.getMainHandStack().getItem() instanceof BlockItem blockItem
                 && blockItem.getBlock() instanceof MountableBlock)
                 && world.getEntitiesByClass(SeatEntity.class, Box.of(pos.toCenterPos(), radius, radius, radius), Entity::isAlive).isEmpty()) {

@@ -9,7 +9,6 @@ import dev.doctor4t.trainmurdermystery.TMM;
 import dev.doctor4t.trainmurdermystery.block_entity.SprinklerBlockEntity;
 import dev.doctor4t.trainmurdermystery.cca.GameWorldComponent;
 import dev.doctor4t.trainmurdermystery.cca.PlayerMoodComponent;
-import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
 import dev.doctor4t.trainmurdermystery.cca.TrainWorldComponent;
 import dev.doctor4t.trainmurdermystery.client.gui.RoundTextRenderer;
 import dev.doctor4t.trainmurdermystery.client.gui.StoreRenderer;
@@ -182,8 +181,8 @@ public class TMMClient implements ClientModInitializer {
 
         // Caching components
         ClientTickEvents.START_WORLD_TICK.register(clientWorld -> {
-            gameComponent = TMMComponents.GAME.get(clientWorld);
-            trainComponent = TMMComponents.TRAIN.get(clientWorld);
+            gameComponent = GameWorldComponent.KEY.get(clientWorld);
+            trainComponent = TrainWorldComponent.KEY.get(clientWorld);
             moodComponent = PlayerMoodComponent.KEY.get(MinecraftClient.getInstance().player);
         });
 
@@ -231,7 +230,7 @@ public class TMMClient implements ClientModInitializer {
             prevGameRunning = gameComponent.isRunning();
 
             // Fade sound with game start / stop fade
-            GameWorldComponent component = TMMComponents.GAME.get(clientWorld);
+            GameWorldComponent component = GameWorldComponent.KEY.get(clientWorld);
             if (component.getFade() > 0) {
                 MinecraftClient.getInstance().getSoundManager().updateSoundVolume(SoundCategory.MASTER, MathHelper.map(component.getFade(), 0, GameConstants.FADE_TIME, soundLevel, 0));
             } else {

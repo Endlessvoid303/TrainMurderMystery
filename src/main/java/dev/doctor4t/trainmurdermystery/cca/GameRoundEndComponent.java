@@ -36,7 +36,7 @@ public class GameRoundEndComponent implements AutoSyncedComponent {
         this.players.clear();
         for (var player : players) {
             var role = RoleAnnouncementText.BLANK;
-            var game = TMMComponents.GAME.get(this.world);
+            var game = GameWorldComponent.KEY.get(this.world);
             if (game.isKiller(player)) {
                 role = RoleAnnouncementText.KILLER;
             } else if (game.isVigilante(player)) {

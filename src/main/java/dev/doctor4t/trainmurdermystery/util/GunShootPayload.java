@@ -1,8 +1,8 @@
 package dev.doctor4t.trainmurdermystery.util;
 
 import dev.doctor4t.trainmurdermystery.TMM;
+import dev.doctor4t.trainmurdermystery.cca.GameWorldComponent;
 import dev.doctor4t.trainmurdermystery.cca.PlayerMoodComponent;
-import dev.doctor4t.trainmurdermystery.cca.TMMComponents;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.game.GameFunctions;
 import dev.doctor4t.trainmurdermystery.index.TMMDataComponentTypes;
@@ -54,7 +54,7 @@ public record GunShootPayload(int target) implements CustomPayload {
             }
 
             if (player.getServerWorld().getEntityById(payload.target()) instanceof PlayerEntity target && target.distanceTo(player) < 65.0) {
-                var game = TMMComponents.GAME.get(player.getWorld());
+                var game = GameWorldComponent.KEY.get(player.getWorld());
                 Item revolver = TMMItems.REVOLVER;
                 if (game.isCivilian(target) && !player.isCreative() && mainHandStack.isOf(revolver)) {
                     Scheduler.schedule(() -> {

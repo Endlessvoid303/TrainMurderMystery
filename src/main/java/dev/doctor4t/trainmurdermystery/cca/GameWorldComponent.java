@@ -1,6 +1,6 @@
 package dev.doctor4t.trainmurdermystery.cca;
 
-import com.mojang.authlib.GameProfile;
+import dev.doctor4t.trainmurdermystery.TMM;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.game.GameFunctions;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,10 +11,12 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.cca.api.v3.component.tick.ClientTickingComponent;
 import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
@@ -24,14 +26,29 @@ import java.util.List;
 import java.util.UUID;
 
 public class GameWorldComponent implements AutoSyncedComponent, ClientTickingComponent, ServerTickingComponent {
+    public static final ComponentKey<GameWorldComponent> KEY = ComponentRegistry.getOrCreate(TMM.id("game"), GameWorldComponent.class);
     private final World world;
 
     public enum GameStatus {
         INACTIVE, STARTING, ACTIVE, STOPPING
     }
     private GameMode gameMode = GameMode.MURDER;
-    public enum GameMode {
-        MURDER, DISCOVERY, LOOSE_ENDS
+
+    public enum GameMode implements StringIdentifiable {
+        MURDER(10),
+        DISCOVERY(10),
+        LOOSE_ENDS(60);
+
+        public final int startTime; // in minutes
+
+        GameMode(int startTime) {
+            this.startTime = startTime;
+        }
+
+        @Override
+        public String asString() {
+            return name();
+        }
     }
 
     private GameStatus gameStatus = GameStatus.INACTIVE;
@@ -52,7 +69,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ClientTickingCom
     }
 
     public void sync() {
-        TMMComponents.GAME.sync(this.world);
+        GameWorldComponent.KEY.sync(this.world);
     }
 
     public int getFade() {
@@ -251,7 +268,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ClientTickingCom
 //        }
 
         if (serverWorld.getServer().getOverworld().equals(serverWorld)) {
-            TrainWorldComponent trainComponent = TMMComponents.TRAIN.get(serverWorld);
+            TrainWorldComponent trainComponent = TrainWorldComponent.KEY.get(serverWorld);
 
             // spectator limits
             if (trainComponent.getTrainSpeed() > 0) {

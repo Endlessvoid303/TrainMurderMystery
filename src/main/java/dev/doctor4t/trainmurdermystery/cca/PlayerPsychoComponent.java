@@ -8,8 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
 import org.jetbrains.annotations.NotNull;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
@@ -63,7 +61,7 @@ public class PlayerPsychoComponent implements AutoSyncedComponent, ServerTicking
         if (ShopEntry.insertStackInFreeSlot(this.player, new ItemStack(TMMItems.BAT))) {
             this.setPsychoTicks(GameConstants.PSYCHO_TIMER);
             this.setArmour(GameConstants.PSYCHO_MODE_ARMOUR);
-            var gameWorldComponent = TMMComponents.GAME.get(this.player.getWorld());
+            var gameWorldComponent = GameWorldComponent.KEY.get(this.player.getWorld());
             gameWorldComponent.setPsychosActive(gameWorldComponent.getPsychosActive() + 1);
             return true;
         }
@@ -73,7 +71,7 @@ public class PlayerPsychoComponent implements AutoSyncedComponent, ServerTicking
     public void stopPsycho() {
         this.psychoTicks = 0;
         this.player.getInventory().remove(itemStack -> itemStack.isOf(TMMItems.BAT), Integer.MAX_VALUE, this.player.playerScreenHandler.getCraftingInput());
-        var gameWorldComponent = TMMComponents.GAME.get(this.player.getWorld());
+        var gameWorldComponent = GameWorldComponent.KEY.get(this.player.getWorld());
         gameWorldComponent.setPsychosActive(gameWorldComponent.getPsychosActive() - 1);
 //        this.startPsycho();
     }
